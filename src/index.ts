@@ -1,23 +1,17 @@
 import Fastify from 'fastify';
-import translationRoutes from './routes/translationRoutes.js';
+import translationRoutes from './interfaces/http/routes/translationRoutes.js';
 
 const fastify = Fastify({
   logger: true
 });
 
-// Register routes
 fastify.register(translationRoutes, { prefix: '/api/v1' });
 
-fastify.get('/', async (request, reply) => {
+fastify.get('/', async () => {
   return { 
-    name: 'Semar API',
-    version: '1.0.0',
-    description: 'Javanese Translation and Transliteration API',
-    endpoints: {
-      translate: 'POST /api/v1/translate',
-      transliterate: 'POST /api/v1/transliterate',
-      health: 'GET /api/v1/health'
-    }
+    name: 'Semar API (Clean Architecture)',
+    version: '1.1.0',
+    description: 'Javanese Translation and Transliteration API'
   };
 });
 
