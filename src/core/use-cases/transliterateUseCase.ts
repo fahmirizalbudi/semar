@@ -1,5 +1,8 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 // @ts-ignore
-import { toJavanese } from 'carakanjs';
+const carakanjs = require('carakanjs');
+const { toJavanese } = carakanjs;
 
 /**
  * Use case responsible for transliterating Latin script into Javanese script (Aksara Jawa).
