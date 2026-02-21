@@ -3,8 +3,16 @@ import path from 'path';
 import { IDictionaryRepository, DictionaryEntry } from '../../core/domain/repositories/dictionaryRepository.js';
 import { JavaneseDialect } from '../../core/domain/entities/translation.js';
 
+/**
+ * Implementation of {@link IDictionaryRepository} that uses local files.
+ * It combines a small hardcoded manual dictionary for high accuracy on common words
+ * with a large JSON dictionary for broader vocabulary.
+ */
 export class FileDictionaryRepository implements IDictionaryRepository {
+  /** In-memory storage for the large JSON dictionary. */
   private csvDict: { [key: string]: string } = {};
+  
+  /** Curated mapping for common words with support for multiple dialects. */
   private manualDict: { [key: string]: DictionaryEntry } = {
     "saya": { ngoko: "aku", krama: "kula" },
     "kamu": { ngoko: "kowe", krama: "panjenengan" },
@@ -28,10 +36,17 @@ export class FileDictionaryRepository implements IDictionaryRepository {
     "halo": { ngoko: "halo", krama: "sugeng" }
   };
 
+  /**
+   * Creates an instance of the repository and triggers dictionary loading.
+   */
   constructor() {
     this.loadDictionary();
   }
 
+  /**
+   * Synchronously loads the large dictionary from a JSON file into memory.
+   * @private
+   */
   private loadDictionary() {
     try {
       const dictPath = path.join(process.cwd(), 'src/data/dictionary.json');
@@ -44,6 +59,13 @@ export class FileDictionaryRepository implements IDictionaryRepository {
     }
   }
 
+  /**
+   * Performs a lookup for an Indonesian word.
+   * 
+   * @param word - The word to translate.
+   * @param dialect - The target Javanese dialect.
+   * @returns The translated word or null if no entry exists.
+   */
   async lookup(word: string, dialect: JavaneseDialect): Promise<string | null> {
     const manualEntry = this.manualDict[word];
     if (manualEntry) {
